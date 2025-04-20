@@ -2,7 +2,7 @@ import os
 import json
 import tempfile
 import subprocess
-import sys  # Added for sys.exit()
+import sys
 from math import log2, sqrt
 import numpy as np
 from appwrite.client import Client
@@ -35,7 +35,7 @@ if not check_ffmpeg():
     sys.exit(1)
 
 def generate_note_frequencies():
-    return {f"{note}{octave}": round(16.35 * (2 ** ((i + (octave * 12)) / 12)), 2)
+    return {f"{note}{octave}": round(16.35 * (2 ** ((i + (octave * 12)) / 12), 2)
             for octave in range(0, 9) for i, note in enumerate(NOTE_NAMES)}
 
 NOTE_FREQUENCIES = generate_note_frequencies()
@@ -69,26 +69,46 @@ def convert_audio_to_wav(input_path, output_path):
 
 def download_and_process_audio(storage, file_id):
     try:
-        temp_dir = os.path.join(os.environ.get('TEMP', os.getcwd()), 'karaoke_temp')
+        # Use /tmp which is standard in containers
+        temp_dir = "/tmp/karaoke_temp"
         os.makedirs(temp_dir, exist_ok=True)
+        os.chmod(temp_dir, 0o777)  # Ensure writable
+        print(f"Temp dir: {temp_dir}, Contents: {os.listdir(temp_dir)}")
         
         input_path = os.path.join(temp_dir, f"{file_id}.m4a")
         output_path = os.path.join(temp_dir, f"{file_id}.wav")
 
         # Download file
+        print(f"Downloading file {file_id} from Appwrite storage")
         file_content = storage.get_file_download(os.getenv('APPWRITE_STORAGE_ID'), file_id)
         with open(input_path, 'wb') as f:
             f.write(file_content)
+        print(f"Downloaded {os.path.getsize(input_path)} bytes to {input_path}")
 
         # Convert and process
+        print(f"Converting {input_path} to WAV format")
         if not convert_audio_to_wav(input_path, output_path):
             raise Exception("Audio conversion failed")
             
+        print(f"Reading WAV file from {output_path}")
         sr, audio = wavfile.read(output_path)
-        print(f"Starting CREPE processing for {file_id}")
-        time, frequency, confidence, _ = crepe_predict(audio, sr, model_capacity='medium', viterbi=True)
+        print(f"Audio stats - SR: {sr}, Shape: {audio.shape}, Max: {np.max(audio)}, Min: {np.min(audio)}")
+        if len(audio) == 0:
+            raise ValueError("Empty audio file")
 
-        print(f"CREPE results - time: {len(time)}, freq: {len(frequency)}, conf: {len(confidence)}")
+        print(f"Starting CREPE processing for {file_id}")
+        try:
+            time, frequency, confidence, _ = crepe_predict(
+                audio, 
+                sr, 
+                model_capacity='tiny',  # Start with tiny model first
+                viterbi=True
+            )
+            print(f"CREPE results - time: {len(time)}, freq: {len(frequency)}, conf: {len(confidence)}")
+            print("CREPE processing completed successfully")
+        except Exception as e:
+            print(f"CREPE processing failed: {str(e)}")
+            raise
         
         # Clean up
         os.remove(input_path)
@@ -114,6 +134,7 @@ def process_recordings(databases, storage, document_ids):
     
     for doc_id in document_ids:
         try:
+            print(f"Processing document {doc_id}")
             doc = databases.get_document(
                 os.getenv('APPWRITE_DB_ID'),
                 os.getenv('APPWRITE_USER_TRACKS_COLLECTION_ID'),
@@ -121,9 +142,11 @@ def process_recordings(databases, storage, document_ids):
             )
             
             if not doc.get('fileIds'):
+                print(f"No fileIds found in document {doc_id}")
                 continue
                 
             file_id = doc['fileIds'][0]
+            print(f"Found fileId {file_id} in document")
             time, frequency, confidence = download_and_process_audio(storage, file_id)
             performance = calculate_performance(frequency, confidence)
             
@@ -131,6 +154,7 @@ def process_recordings(databases, storage, document_ids):
                 combined_performance[note] = (combined_performance.get(note, 0) + score) / 2
                 
             processed_files.append(file_id)
+            print(f"Successfully processed {file_id}")
         except Exception as e:
             print(f"Error processing {doc_id}: {str(e)}")
             
