@@ -7,7 +7,7 @@ RUN apt-get update && \
         libsm6 \
         libxext6 \
         libgl1-mesa-glx && \
-        rm -rf /var/lib/apt/lists/ \*
+        rm -rf /var/lib/apt/lists/*
 
 # 2. Verify FFmpeg is in PATH and works
 RUN ffmpeg -version && which ffmpeg  # Should show /usr/bin/ffmpeg
