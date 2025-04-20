@@ -1,1 +1,1 @@
-web: gunicorn --bind 0.0.0.0:$PORT --timeout 120 --workers 2 --preload local-server:app
+web: (apt-get update && apt-get install -y ffmpeg > /dev/null 2>&1 || curl -sL https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz | tar xJ --strip-components=1 -C /usr/local/bin/ ffmpeg-*-static/ffmpeg) && gunicorn --bind 0.0.0.0:$PORT --timeout 120 --workers 2 --preload local-server:app
