@@ -1,13 +1,16 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import threading
-import os
 from dotenv import load_dotenv
 from main import main as process_audio
 import warnings
 import json
 import subprocess
 import sys
+import os
+port = os.getenv('PORT', '5000')  # Default to 5000 if not set
+
+print(f"🚀 Railway assigned PORT: {port}")  # Will appear in deployment logs
 print("### BOOTSTRAP LOG ###", file=sys.stderr)
 print("Python:", sys.version, file=sys.stderr)
 print("PATH:", sys.path, file=sys.stderr)
