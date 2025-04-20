@@ -85,7 +85,10 @@ def download_and_process_audio(storage, file_id):
             raise Exception("Audio conversion failed")
             
         sr, audio = wavfile.read(output_path)
+        print(f"Starting CREPE processing for {file_id}")
         time, frequency, confidence, _ = crepe_predict(audio, sr, model_capacity='medium', viterbi=True)
+
+        print(f"CREPE results - time: {len(time)}, freq: {len(frequency)}, conf: {len(confidence)}")
         
         # Clean up
         os.remove(input_path)
@@ -200,7 +203,6 @@ def main(data: dict):
             document_id,
             {'processingStatus': 'processing'}
         )
-        print(f"✅ Updated document {document_id}", flush=True)
 
         # Process audio and get performance data
         combined_performance, processed_files = process_recordings(
@@ -270,6 +272,9 @@ def main(data: dict):
             document_id,
             result
         )
+        
+        print(f"✅ Updated document {document_id}", flush=True)
+
 
     except Exception as e:
         print(f"Processing failed: {str(e)}")
