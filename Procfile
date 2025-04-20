@@ -1,1 +1,1 @@
-web: (apt-get update && apt-get install -y ffmpeg > /tmp/ffmpeg_install.log 2>&1 || curl -sL https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz | tar xJ --strip-components=1 -C /usr/local/bin/ ffmpeg-*-static/ffmpeg) && echo "FFmpeg installed" && gunicorn --bind 0.0.0.0:$PORT --timeout 120 --workers 1 --preload local-server:app
+web: gunicorn --bind 0.0.0.0:$PORT --timeout 120 local-server:app
