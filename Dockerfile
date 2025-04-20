@@ -12,4 +12,4 @@ WORKDIR /app
 COPY . .
 RUN pip install -r requirements.txt
 
-CMD ["gunicorn", "--bind", "0.0.0.0:${PORT:-5000}", "--timeout", "120", "--workers", "1", "local-server:app"]
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${PORT:-5000} --timeout 120 --workers 1 local-server:app"]
