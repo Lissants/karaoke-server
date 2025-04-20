@@ -19,9 +19,7 @@ appwrite==9.0.3
 requests==2.31.0
 
 # Machine Learning (Optimized)
-tensorflow==2.15.0
-h5py==3.10.0
-keras==2.15.0
+tensorflow==2.19.0
 
 # Utilities
 python-dotenv==1.0.0
