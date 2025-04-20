@@ -100,6 +100,10 @@ def download_and_process_audio(storage, file_id):
         print(f"Reading WAV file from {output_path}")
         sr, audio = wavfile.read(output_path)
         print(f"Audio stats - SR: {sr}, Shape: {audio.shape}, Max: {np.max(audio)}, Min: {np.min(audio)}")
+
+        max_samples = 30 * sr  # 30 seconds
+        audio = audio[:max_samples] if len(audio) > max_samples else audio
+        
         if len(audio) == 0:
             raise ValueError("Empty audio file")
 
@@ -109,7 +113,9 @@ def download_and_process_audio(storage, file_id):
                 audio, 
                 sr, 
                 model_capacity='tiny',  # Start with tiny model first
-                viterbi=True
+                viterbi=True,
+                step_size = 50,
+                center = False
             )
             print(f"CREPE results - time: {len(time)}, freq: {len(frequency)}, conf: {len(confidence)}")
             print("CREPE processing completed successfully")
