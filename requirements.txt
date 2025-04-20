@@ -19,7 +19,7 @@ appwrite==9.0.3
 requests==2.31.0
 
 # Machine Learning (Optimized)
-tensorflow==2.19.0
+tensorflow_cpu==2.19.0
 
 # Utilities
 python-dotenv==1.0.0
