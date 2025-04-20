@@ -200,6 +200,7 @@ def main(data: dict):
             document_id,
             {'processingStatus': 'processing'}
         )
+        print(f"✅ Updated document {document_id}", flush=True)
 
         # Process audio and get performance data
         combined_performance, processed_files = process_recordings(
