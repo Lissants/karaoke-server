@@ -22,14 +22,17 @@ load_dotenv('endpoints.env')
 NOTE_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
 
 def check_ffmpeg():
-    ffmpeg_path = "/usr/local/bin/ffmpeg"
-    try:
-        subprocess.run([ffmpeg_path, '-version'], check=True, capture_output=True)
-        print(f"ffmpeg is available")
-        return True
-    except Exception as e:
-        print(f"FFmpeg check failed: {str(e)}")
-        return False
+    # Try common FFmpeg paths
+    for ffmpeg_path in ['/usr/bin/ffmpeg', '/usr/local/bin/ffmpeg']:
+        try:
+            subprocess.run([ffmpeg_path, '-version'], check=True, capture_output=True)
+            print(f"FFmpeg found at: {ffmpeg_path}")
+            return True
+        except Exception:
+            continue
+    
+    print("FFmpeg check failed: Could not find FFmpeg in common locations")
+    return False
 
 if not check_ffmpeg():
     sys.exit(1)
