@@ -15,34 +15,31 @@ print("### BOOTSTRAP LOG ###", file=sys.stderr)
 print("Python:", sys.version, file=sys.stderr)
 print("PATH:", sys.path, file=sys.stderr)
 
-# Check FFmpeg
-ffmpeg_check = subprocess.run(
-    ["which", "ffmpeg"], 
-    capture_output=True, 
-    text=True
-)
-print(f"FFmpeg Path: {ffmpeg_check.stdout.strip() or 'NOT FOUND'}")
-# Check FFmpeg availability
 def verify_ffmpeg():
     try:
-        # Check common install paths
+        # Try system PATH first
+        result = subprocess.run(
+            ['ffmpeg', '-version'],
+            capture_output=True,
+            text=True
+        )
+        print(f"✅ FFmpeg found at: {result.stdout.splitlines()[0]}")
+        return True
+    except Exception as e:
+        print(f"❌ FFmpeg check failed: {str(e)}")
+        print("Trying explicit paths...")
+        
+        # Check known locations
         for path in ['/usr/bin/ffmpeg', '/usr/local/bin/ffmpeg']:
             try:
-                subprocess.run([path, '-version'], check=True, capture_output=True)
+                subprocess.run([path, '-version'], check=True)
                 print(f"✅ FFmpeg found at: {path}")
                 return True
             except:
                 continue
-        print("❌ FFmpeg not found in any standard path!")
+                
+        print("❌ No working FFmpeg installation found!")
         return False
-    except Exception as e:
-        print(f"🚨 FFmpeg verification failed: {str(e)}")
-        return False
-
-if not verify_ffmpeg():
-    import sys
-    sys.exit(1)
-
 # Check Python env
 print(f"Python Path: {os.sys.executable}")
 print(f"Working Dir: {os.getcwd()}")
