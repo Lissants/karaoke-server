@@ -3,11 +3,11 @@ FROM python:3.11-slim-bookworm
 # 1. Install FFmpeg with all runtime dependencies
 RUN apt-get update && \
     apt-get install -y \
-    ffmpeg \
-    libsm6 \
-    libxext6 \
-    libgl1-mesa-glx \  # Required for some audio processing
-    && rm -rf /var/lib/apt/lists/*
+        ffmpeg \
+        libsm6 \
+        libxext6 \
+        libgl1-mesa-glx && \  # Required for some audio processing
+    rm -rf /var/lib/apt/lists/*
 
 # 2. Verify FFmpeg is in PATH and works
 RUN ffmpeg -version && which ffmpeg  # Should show /usr/bin/ffmpeg
