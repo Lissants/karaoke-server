@@ -1,22 +1,23 @@
-FROM python:3.11
+FROM python:3.11-slim-bookworm
 
-# Install system dependencies
+# 1. Install FFmpeg and dependencies
 RUN apt-get update && \
     apt-get install -y \
         ffmpeg \
         libsm6 \
         libxext6 \
         libgl1-mesa-glx \
-        libsndfile1 \
-        gcc \
-        g++ \
-        make && \
+        libsndfile1 && \
     rm -rf /var/lib/apt/lists/*
+
+# 2. Verify FFmpeg installation
+RUN ffmpeg -version && which ffmpeg
 
 WORKDIR /app
 COPY . .
 
-# Install Python dependencies with build tools first
+# 3. Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-CMD gunicorn --bind 0.0.0.0:${PORT:-5000} --timeout 600 --workers 1 local-server:app
+# 4. Use the correct FFmpeg path (/usr/bin/ffmpeg)
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--timeout", "600", "--workers", "1", "local-server:app"]
