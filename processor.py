@@ -22,6 +22,7 @@ def run_processing(doc_id, request_path):
         os.chdir(work_dir)
         
         logging.info(f"Processing {doc_id} in {work_dir}")
+        print(f"🔄 Processing document {doc_id}", flush=True)
         
         # Execute main processing
         main(data)
