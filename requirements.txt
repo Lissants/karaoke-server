@@ -1,32 +1,39 @@
-# Core audio processing packages (updated versions)
-numba==0.58.1  # Works with Python 3.11
-llvmlite==0.41.1  # Must match numba version
-librosa==0.10.1
-crepe==0.0.16
-soundfile==0.12.1
-
-# Web framework
-Flask==2.3.2  # More stable with Python 3.11 than Flask 3.x
+# Core Framework
+Flask==2.3.2
 flask-cors==4.0.0
 gunicorn==21.2.0
+Werkzeug==2.3.7
 
-# Appwrite
-appwrite==9.0.3
-
-# Numeric/scientific computing
+# Audio Processing
+crepe==0.0.16
+librosa==0.10.1
+soundfile==0.12.1
+resampy==0.4.2
+numba==0.58.1
+llvmlite==0.41.1
 numpy==1.26.4
 scipy==1.12.0
-scikit-learn==1.4.0
-pandas==2.2.2
 
-# TensorFlow (specific version for Python 3.11)
-tensorflow==2.15.0  # Last version with Python 3.11 support
+# Appwrite Integration
+appwrite==9.0.3
+requests==2.31.0
+
+# Machine Learning (Simplified)
+tensorflow==2.15.0
 tensorflow-intel==2.15.0
+h5py==3.10.0
+keras==2.15.0
 
-# Runtime essentials
+# Utilities
+python-dotenv==1.0.0
+python-dateutil==2.8.2
+pandas==2.2.2
+Pillow==10.1.0
+
+# FFmpeg Handling
+ffmpeg-python==0.2.0
+
+# Runtime Essentials
 setuptools==68.2.2
 wheel==0.42.0
 pip==23.3.2
-
-# FFmpeg wrapper
-ffmpeg-python==0.2.0
