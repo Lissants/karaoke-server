@@ -1,13 +1,15 @@
 FROM python:3.11-slim-bookworm
 
-# Install FFmpeg
-RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
+# 1. Install FFmpeg first (with dependencies)
+RUN apt-get update && \
+    apt-get install -y ffmpeg libsm6 libxext6 && \
+    rm -rf /var/lib/apt/lists/*
+
+# 2. Verify installation
+RUN ffmpeg -version
 
 WORKDIR /app
 COPY . .
+RUN pip install -r requirements.txt
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Use PORT from environment with 5000 as fallback
-CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${PORT:-5000} --timeout 120 --workers 1 local-server:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:${PORT:-5000}", "--timeout", "120", "--workers", "1", "local-server:app"]
