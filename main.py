@@ -22,13 +22,13 @@ load_dotenv('endpoints.env')
 NOTE_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
 
 def check_ffmpeg():
+    ffmpeg_path = "/usr/local/bin/ffmpeg"
     try:
-        subprocess.run(['ffmpeg', '-version'], capture_output=True, check=True)
-        print("FFmpeg is available")
+        subprocess.run([ffmpeg_path, '-version'], check=True, capture_output=True)
+        print(f"ffmpeg is available")
         return True
     except Exception as e:
-        print("FFmpeg check failed. Please install FFmpeg and add it to your PATH")
-        print(f"Error: {str(e)}")
+        print(f"FFmpeg check failed: {str(e)}")
         return False
 
 if not check_ffmpeg():
