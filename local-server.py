@@ -9,6 +9,19 @@ import json
 import sys
 import subprocess
 
+# Check FFmpeg
+ffmpeg_check = subprocess.run(
+    ["which", "ffmpeg"], 
+    capture_output=True, 
+    text=True
+)
+print(f"FFmpeg Path: {ffmpeg_check.stdout.strip() or 'NOT FOUND'}")
+
+# Check Python env
+print(f"Python Path: {os.sys.executable}")
+print(f"Working Dir: {os.getcwd()}")
+print(f"Files in Dir: {os.listdir()}")
+
 # Suppress TensorFlow warnings
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 warnings.filterwarnings('ignore')
