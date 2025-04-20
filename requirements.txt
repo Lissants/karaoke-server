@@ -22,3 +22,11 @@ pandas==2.2.2
 # TensorFlow (specific version for Python 3.11)
 tensorflow==2.15.0  # Last version with Python 3.11 support
 tensorflow-intel==2.15.0
+
+# Runtime essentials
+setuptools==68.2.2
+wheel==0.42.0
+pip==23.3.2
+
+# FFmpeg wrapper
+ffmpeg-python==0.2.0
