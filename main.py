@@ -38,7 +38,7 @@ def generate_note_frequencies():
     frequencies = {}
     for octave in range(0, 9):
         for i, note in enumerate(NOTE_NAMES):
-            freq = 16.35 * (2 ** ((i + (octave * 12)) / 12)
+            freq = 16.35 * (2 ** ((i + (octave * 12)) / 12))  # Added missing parenthesis here
             frequencies[f"{note}{octave}"] = round(freq, 2)
     return frequencies
 
@@ -320,6 +320,8 @@ def main(data: dict):
         raise
         
 if __name__ == "__main__":
+    print("Testing note frequency generation...")
     notes = generate_note_frequencies()
-    print("Generated notes:", len(notes))
-    print("Sample notes:", dict(list(notes.items())[:5]))
+    print(f"Generated {len(notes)} notes")
+    print("First octave:", {k:v for k,v in notes.items() if k.endswith('0')})
+    print("Middle C (C4):", notes.get('C4', 'Not found'))
