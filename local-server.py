@@ -22,6 +22,26 @@ ffmpeg_check = subprocess.run(
     text=True
 )
 print(f"FFmpeg Path: {ffmpeg_check.stdout.strip() or 'NOT FOUND'}")
+# Check FFmpeg availability
+def verify_ffmpeg():
+    try:
+        # Check common install paths
+        for path in ['/usr/bin/ffmpeg', '/usr/local/bin/ffmpeg']:
+            try:
+                subprocess.run([path, '-version'], check=True, capture_output=True)
+                print(f"✅ FFmpeg found at: {path}")
+                return True
+            except:
+                continue
+        print("❌ FFmpeg not found in any standard path!")
+        return False
+    except Exception as e:
+        print(f"🚨 FFmpeg verification failed: {str(e)}")
+        return False
+
+if not verify_ffmpeg():
+    import sys
+    sys.exit(1)
 
 # Check Python env
 print(f"Python Path: {os.sys.executable}")
