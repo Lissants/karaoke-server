@@ -7,11 +7,11 @@ RUN apt-get update && \
         libsm6 \
         libxext6 \
         libgl1-mesa-glx \
-        libsndfile1 \  # Required for audio file I/O
-        gcc \          # Needed for compiling some Python packages
-        g++ \          # Needed for compiling some Python packages
+        libsndfile1 \
+        gcc \
+        g++ \
         make && \
-        rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 COPY . .
