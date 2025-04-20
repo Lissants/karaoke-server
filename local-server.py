@@ -6,8 +6,11 @@ from dotenv import load_dotenv
 from main import main as process_audio
 import warnings
 import json
-import sys
 import subprocess
+import sys
+print("### BOOTSTRAP LOG ###", file=sys.stderr)
+print("Python:", sys.version, file=sys.stderr)
+print("PATH:", sys.path, file=sys.stderr)
 
 # Check FFmpeg
 ffmpeg_check = subprocess.run(
