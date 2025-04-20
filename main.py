@@ -35,11 +35,12 @@ if not check_ffmpeg():
     sys.exit(1)
 
 def generate_note_frequencies():
-    return {
-        f"{note}{octave}": round(16.35 * (2 ** ((i + (octave * 12)) / 12), 2)
-        for octave in range(0, 9) 
-        for i, note in enumerate(NOTE_NAMES)
-    }
+    frequencies = {}
+    for octave in range(0, 9):
+        for i, note in enumerate(NOTE_NAMES):
+            freq = 16.35 * (2 ** ((i + (octave * 12)) / 12)
+            frequencies[f"{note}{octave}"] = round(freq, 2)
+    return frequencies
 
 NOTE_FREQUENCIES = generate_note_frequencies()
 
