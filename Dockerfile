@@ -6,8 +6,8 @@ RUN apt-get update && \
         ffmpeg \
         libsm6 \
         libxext6 \
-        libgl1-mesa-glx && \  # Required for some audio processing
-    rm -rf /var/lib/apt/lists/*
+        libgl1-mesa-glx && \
+        rm -rf /var/lib/apt/lists/ \*
 
 # 2. Verify FFmpeg is in PATH and works
 RUN ffmpeg -version && which ffmpeg  # Should show /usr/bin/ffmpeg
@@ -18,7 +18,7 @@ COPY . .
 # 3. Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 4. Create symlink to expected location (if needed)
+# 4. Create symlink to expected location
 RUN ln -s /usr/bin/ffmpeg /usr/local/bin/ffmpeg
 
 # 5. Run with explicit PATH
