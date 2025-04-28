@@ -142,7 +142,7 @@ def calculate_performance(frequencies, confidences):
             for freq in valid_freqs if frequency_to_note(freq)}
 
 def process_recordings(databases, storage, document_ids):
-    combined_performance = {}
+    combined_performance = defaultdict(lambda: {"sum": 0, "count": 0})
     processed_files = []
     
     for doc_id in document_ids:
@@ -164,14 +164,18 @@ def process_recordings(databases, storage, document_ids):
             performance = calculate_performance(frequency, confidence)
             
             for note, score in performance.items():
-                combined_performance[note] = (combined_performance.get(note, 0) + score) / 2
+                combined_performance[note]["sum"] += score
+                combined_performance[note]["count"] += 1
                 
             processed_files.append(file_id)
             print(f"Successfully processed {file_id}")
         except Exception as e:
             print(f"Error processing {doc_id}: {str(e)}")
             
-    return combined_performance, processed_files
+    return {
+        note: entry["sum"] / entry["count"]
+        for note, entry in combined_performance.items()
+    }, processed_files
 
 def generate_recommendations(tracks, performance):
     recommendations = []
