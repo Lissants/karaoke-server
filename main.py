@@ -14,6 +14,7 @@ from appwrite.query import Query
 import datetime
 from crepe import predict as crepe_predict
 import tempfile
+from collections import defaultdict
 
 # Load environment variables early
 load_dotenv('endpoints.env')
